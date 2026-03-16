@@ -9,7 +9,7 @@ use App\Models\Category;
 
 class CategoryController extends Controller
 {
-    protected $categoryService;
+    protected CategoryService $categoryService;
     
     public function __construct(CategoryService $categoryService)
     {
@@ -19,17 +19,12 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
-
         $categories = Category::query()
-            ->when($search, function ($query) use ($search) {
-                $query->where('name', 'like', '%' . $search . '%');
-            })
+            ->when($search, fn($q) => $q->where('name', 'like', '%' . $search . '%'))
             ->latest()
             ->get();
 
-        $hasSearchQuery = $request->has('search') && !empty($search);
-
-        return view('admin.categories.index', compact('categories', 'search', 'hasSearchQuery'));
+        return view('admin.categories.index', compact('categories', 'search'));
     }
 
     public function create()
@@ -37,50 +32,53 @@ class CategoryController extends Controller
         return view('admin.categories.create');
     }
 
-    public function store(Request $request, CategoryService $categoryService)
+    public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:categories,name',
-            'photos.*' => 'image|mimes:jpeg,png,jpg,webp|max:5120',
-        ]);
+        $this->validateCategory($request);
 
-        $categoryService->createCategory(
+        $this->categoryService->createCategory(
             $request->only(['name']), 
+            $request->file('main_photo'),
             $request->file('photos')
         );
 
-        return redirect()->route('admin.categories.index')->with('success', 'Категория успешно создана!');
+        return redirect()->route('admin.categories.index')->with('success', 'Категория создана!');
     }
 
     public function edit(Category $category)
     {
+        $category->load('images');
         return view('admin.categories.create', compact('category'));
     }
 
-    public function update(Request $request, Category $category, CategoryService $categoryService)
+    public function update(Request $request, Category $category)
     {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
-            'photos.*' => 'image|mimes:jpeg,png,jpg,webp|max:5120',
-            'remove_images' => 'nullable|array',
-        ]);
+        $this->validateCategory($request);
 
-        $categoryService->updateCategory(
+        $this->categoryService->updateCategory(
             $category,
             $request->only(['name']),
+            $request->file('main_photo'),
             $request->file('photos'),
             $request->input('remove_images', [])
         );
 
-        return redirect()->route('admin.categories.index')->with('success', 'Категория успешно обновлена!');
+        return redirect()->route('admin.categories.index')->with('success', 'Категория обновлена!');
     }
 
-    public function destroy($id, CategoryService $categoryService)
+    public function destroy(Category $category)
     {
-        $category = Category::findOrFail($id);
-        
-        $categoryService->deleteCategory($category);
+        $this->categoryService->deleteCategory($category);
+        return redirect()->back()->with('success', 'Категория удалена!');
+    }
 
-        return redirect()->back()->with('success', 'Категория и все её изображения успешно удалены!');
+    protected function validateCategory(Request $request)
+    {
+        return $request->validate([
+            'name'          => 'required|string|max:255|unique:categories,name,' . ($request->category->id ?? 'NULL'),
+            'main_photo'    => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'photos.*'      => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'remove_images' => 'nullable|array',
+        ]);
     }
 }

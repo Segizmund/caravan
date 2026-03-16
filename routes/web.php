@@ -81,5 +81,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 // --- Публичная часть ---
 
 Route::get('/', [Frontend\Home\HomeController::class, 'index'])->name('home.index');
+Route::get('/trailers', [Frontend\Trailer\TrailerController::class, 'index'])->name('trailer.index');
+Route::get('/services', [Frontend\Service\ServiceController::class, 'index'])->name('service.index');
+
+Route::get('/trailers/category/{categoryId}/load-more', [Frontend\Trailer\TrailerController::class, 'loadMore'])->name('trailers.load-more');
 
 require __DIR__.'/auth.php';

@@ -1,49 +1,53 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\UploadedFile;
+use App\Services\SlugService;
 
 class CategoryService
 {
-    public function createCategory(array $data, ?array $files = null): Category
+    public function createCategory(array $data, ?UploadedFile $mainPhoto = null, ?array $galleryFiles = null): Category
     {
-        $slug = Str::slug($data['name']);
-        $originalSlug = $slug;
-        $count = 1;
-        
-        while (Category::where('slug', $slug)->exists()) {
-            $slug = $originalSlug . '-' . $count++;
-        }
-
-        $data['slug'] = $slug;
-
+        $data['slug'] = SlugService::generate($data['name'], Category::class);
         $category = Category::create($data);
 
-        if ($files) {
-            foreach ($files as $photo) {
+        if ($mainPhoto) {
+            $path = $mainPhoto->store('category', 'public');
+            $category->images()->create(['path' => $path, 'is_main' => true]);
+        }
+
+        if ($galleryFiles) {
+            foreach ($galleryFiles as $photo) {
                 $path = $photo->store('category', 'public');
-                $category->images()->create(['path' => $path]);
+                $category->images()->create(['path' => $path, 'is_main' => false]);
             }
         }
 
         return $category;
     }
 
-    public function updateCategory(Category $category, array $data, ?array $files = null, array $removeImageIds = []): Category
+    public function updateCategory(Category $category, array $data, ?UploadedFile $mainPhoto = null, ?array $galleryFiles = null, array $removeImageIds = []): Category
     {
-        $slug = Str::slug($data['name']);
-        $originalSlug = $slug;
-        $count = 1;
-        while (Category::where('slug', $slug)->where('id', '!=', $category->id)->exists()) {
-            $slug = $originalSlug . '-' . $count++;
+        if (isset($data['name']) && $data['name'] !== $category->name) {
+            $data['slug'] = SlugService::generate($data['name'], Category::class, $category->id);
         }
         
-        $data['slug'] = $slug;
         $category->update($data);
 
-        // Удаление фото
+        if ($mainPhoto) {
+            $oldMain = $category->images()->where('is_main', true)->first();
+            if ($oldMain) {
+                Storage::disk('public')->delete($oldMain->path);
+                $oldMain->delete();
+            }
+            $path = $mainPhoto->store('category', 'public');
+            $category->images()->create(['path' => $path, 'is_main' => true]);
+        }
+
         if (!empty($removeImageIds)) {
             $images = $category->images()->whereIn('id', $removeImageIds)->get();
             foreach ($images as $image) {
@@ -52,11 +56,10 @@ class CategoryService
             }
         }
 
-        // Добавление новых фото
-        if ($files) {
-            foreach ($files as $photo) {
+        if ($galleryFiles) {
+            foreach ($galleryFiles as $photo) {
                 $path = $photo->store('category', 'public');
-                $category->images()->create(['path' => $path]);
+                $category->images()->create(['path' => $path, 'is_main' => false]);
             }
         }
 
@@ -65,14 +68,10 @@ class CategoryService
 
     public function deleteCategory(Category $category): void
     {
-        $images = $category->images;
-
-        foreach ($images as $image) {
+        foreach ($category->images as $image) {
             Storage::disk('public')->delete($image->path);
         }
-
         $category->images()->delete();
-
         $category->delete();
     }
 }

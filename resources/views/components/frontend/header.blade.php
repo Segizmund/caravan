@@ -12,18 +12,18 @@
                                             fixed lg:static right-0 top-[72px] z-10 bg-white lg:bg-transparent p-5 lg:p-0 
                                             translate-x-full lg:translate-x-0 transition-transform duration-300 ease-linear">
                     <div class="flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-8">
-                        <a href="{{ route('home.index') }}" 
+                        <a href="{{ route('trailer.index') }}" 
                         class="font-semibold relative group flex">
                             Каталог прицепов
                             <span class="absolute left-1/2 -translate-x-1/2 bottom-0 block h-[1px] bg-[#ffaa21] w-full transition-transform duration-500 ease-out origin-center 
-                                {{ request()->routeIs('home.index') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100' }}">
+                                {{ request()->routeIs('trailer.index') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100' }}">
                             </span>
                         </a>
-                        <a href="{{ route('home.index') }}" 
+                        <a href="{{ route('service.index') }}" 
                         class="font-semibold relative group flex">
                             Услуги
                             <span class="absolute left-1/2 -translate-x-1/2 bottom-0 block h-[1px] bg-[#ffaa21] w-full transition-transform duration-500 ease-out origin-center 
-                                {{ request()->routeIs('home.index') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100' }}">
+                                {{ request()->routeIs('service.index') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100' }}">
                             </span>
                         </a>
                         <a href="{{ route('home.index') }}" 

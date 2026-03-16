@@ -19,7 +19,7 @@
         @if(isset($service)) @method('PUT') @endif
 
         <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 flex flex-col gap-6">
-            
+            @include('admin.partials.image-main-upload', ['model' => $service ?? null])
             <div>
                 <label class="block text-sm font-medium text-gray-700">Название услуги</label>
                 <input type="text" name="name" value="{{ old('name', $service->name ?? '') }}" class="mt-1 w-full rounded-md border-gray-300" required>

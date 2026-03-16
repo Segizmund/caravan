@@ -1,54 +1,52 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\Service;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\UploadedFile;
+use App\Services\SlugService;
 
 class ServiceService
 {
-    public function createService(array $data, ?array $files = null): Service
+    public function createService(array $data, ?UploadedFile $mainPhoto = null, ?array $galleryFiles = null): Service
     {
+        $data['slug'] = SlugService::generate($data['name'], Service::class);
+        $service = Service::create($data);
 
-        $slug = Str::slug($data['name']);
-        $originalSlug = $slug;
-        $count = 1;
-        
-        while (Service::where('slug', $slug)->exists()) {
-            $slug = $originalSlug . '-' . $count++;
+        if ($mainPhoto) {
+            $path = $mainPhoto->store('services', 'public');
+            $service->images()->create(['path' => $path, 'is_main' => true]);
         }
-        $data['slug'] = $slug;
 
-        $service = Service::create([
-            'name'        => $data['name'],
-            'slug'        => $slug,
-            'description' => $data['description'],
-        ]);
-
-        if ($files) {
-            foreach ($files as $photo) {
+        if ($galleryFiles) {
+            foreach ($galleryFiles as $photo) {
                 $path = $photo->store('services', 'public');
-                $service->images()->create(['path' => $path]);
+                $service->images()->create(['path' => $path, 'is_main' => false]);
             }
         }
 
         return $service;
     }
 
-    public function updateService(Service $service, array $data, ?array $files, array $removeImageIds)
+    public function updateService(Service $service, array $data, ?UploadedFile $mainPhoto = null, ?array $galleryFiles = null, array $removeImageIds = [])
     {
-        $slug = Str::slug($data['name']);
-        $originalSlug = $slug;
-        $count = 1;
-        
-        while (Service::where('slug', $slug)->where('id', '!=', $service->id)->exists()) {
-            $slug = $originalSlug . '-' . $count++;
+        if (isset($data['name']) && $data['name'] !== $service->name) {
+            $data['slug'] = SlugService::generate($data['name'], Service::class, $service->id);
         }
-        $data['slug'] = $slug;
-
+        
         $service->update($data);
 
-        // Удаление фото
+        if ($mainPhoto) {
+            $oldMain = $service->images()->where('is_main', true)->first();
+            if ($oldMain) {
+                Storage::disk('public')->delete($oldMain->path);
+                $oldMain->delete();
+            }
+            $path = $mainPhoto->store('services', 'public');
+            $service->images()->create(['path' => $path, 'is_main' => true]);
+        }
+
         if (!empty($removeImageIds)) {
             $images = $service->images()->whereIn('id', $removeImageIds)->get();
             foreach ($images as $image) {
@@ -57,25 +55,28 @@ class ServiceService
             }
         }
 
-        // Добавление новых фото
-        if ($files) {
-            foreach ($files as $photo) {
+        if ($galleryFiles) {
+            foreach ($galleryFiles as $photo) {
                 $path = $photo->store('services', 'public');
-                $service->images()->create(['path' => $path]);
+                $service->images()->create(['path' => $path, 'is_main' => false]);
             }
         }
     }
 
     public function deleteService(Service $service): void
     {
-        $images = $service->images;
-
-        foreach ($images as $image) {
+        foreach ($service->images as $image) {
             Storage::disk('public')->delete($image->path);
         }
-
         $service->images()->delete();
-
         $service->delete();
+    }
+
+    // --- Публичная часть ---- //
+    public function getAllServices()
+    {
+        return Service::with(['images' => function ($query) {
+            $query->where('is_main', true);
+        }])->get();
     }
 }

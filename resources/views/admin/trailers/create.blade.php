@@ -39,6 +39,7 @@
                     </div>
                 </div>
             </div>
+            @include('admin.partials.image-main-upload', ['model' => $trailer ?? null])
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="col-span-2">
                     <label class="block text-sm font-medium text-gray-700">Название модели</label>

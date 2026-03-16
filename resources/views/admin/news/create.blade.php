@@ -19,7 +19,7 @@
         @if(isset($news)) @method('PUT') @endif
 
         <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 flex flex-col gap-6">
-            
+            @include('admin.partials.image-main-upload', ['model' => $news ?? null])
             <div>
                 <label class="block text-sm font-medium text-gray-700">Название новости</label>
                 <input type="text" name="title" value="{{ old('title', $news->title ?? '') }}" class="mt-1 w-full rounded-md border-gray-300" required>

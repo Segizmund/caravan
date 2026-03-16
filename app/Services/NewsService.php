@@ -1,54 +1,52 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\News;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\UploadedFile;
+use App\Services\SlugService;
 
 class NewsService
 {
-    public function createNews(array $data, ?array $files = null): News
+    public function createNews(array $data, ?UploadedFile $mainPhoto = null, ?array $galleryFiles = null): News
     {
+        $data['slug'] = SlugService::generate($data['title'], News::class);
+        $news = News::create($data);
 
-        $slug = Str::slug($data['title']);
-        $originalSlug = $slug;
-        $count = 1;
-        
-        while (News::where('slug', $slug)->exists()) {
-            $slug = $originalSlug . '-' . $count++;
+        if ($mainPhoto) {
+            $path = $mainPhoto->store('news', 'public');
+            $news->images()->create(['path' => $path, 'is_main' => true]);
         }
-        $data['slug'] = $slug;
 
-        $news = News::create([
-            'title'        => $data['title'],
-            'slug'        => $slug,
-            'description' => $data['description'],
-        ]);
-
-        if ($files) {
-            foreach ($files as $photo) {
+        if ($galleryFiles) {
+            foreach ($galleryFiles as $photo) {
                 $path = $photo->store('news', 'public');
-                $news->images()->create(['path' => $path]);
+                $news->images()->create(['path' => $path, 'is_main' => false]);
             }
         }
 
         return $news;
     }
 
-    public function updateNews(News $news, array $data, ?array $files, array $removeImageIds)
+    public function updateNews(News $news, array $data, ?UploadedFile $mainPhoto = null, ?array $galleryFiles = null, array $removeImageIds = [])
     {
-        $slug = Str::slug($data['title']);
-        $originalSlug = $slug;
-        $count = 1;
-        
-        while (News::where('slug', $slug)->where('id', '!=', $news->id)->exists()) {
-            $slug = $originalSlug . '-' . $count++;
+        if (isset($data['title']) && $data['title'] !== $news->title) {
+            $data['slug'] = SlugService::generate($data['title'], News::class, $news->id);
         }
-        $data['slug'] = $slug;
-
+        
         $news->update($data);
 
-        // Удаление фото
+        if ($mainPhoto) {
+            $oldMain = $news->images()->where('is_main', true)->first();
+            if ($oldMain) {
+                Storage::disk('public')->delete($oldMain->path);
+                $oldMain->delete();
+            }
+            $path = $mainPhoto->store('news', 'public');
+            $news->images()->create(['path' => $path, 'is_main' => true]);
+        }
+
         if (!empty($removeImageIds)) {
             $images = $news->images()->whereIn('id', $removeImageIds)->get();
             foreach ($images as $image) {
@@ -57,25 +55,20 @@ class NewsService
             }
         }
 
-        // Добавление новых фото
-        if ($files) {
-            foreach ($files as $photo) {
+        if ($galleryFiles) {
+            foreach ($galleryFiles as $photo) {
                 $path = $photo->store('news', 'public');
-                $news->images()->create(['path' => $path]);
+                $news->images()->create(['path' => $path, 'is_main' => false]);
             }
         }
     }
 
     public function deleteNews(News $news): void
     {
-        $images = $news->images;
-
-        foreach ($images as $image) {
+        foreach ($news->images as $image) {
             Storage::disk('public')->delete($image->path);
         }
-
         $news->images()->delete();
-
         $news->delete();
     }
 }

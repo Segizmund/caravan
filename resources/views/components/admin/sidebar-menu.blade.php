@@ -73,11 +73,11 @@
 
         <div class="flex flex-col gap-2 py-2">
             <div>
-                <a class="p-2 flex w-full hover:bg-blue-500 hover:text-white rounded-xl transition duration-300 ease-linear {{request()->routeIs('admin.gallery.index') ? 'bg-blue-500 text-white' : ''}}" 
+                <a class="p-2 flex w-full hover:bg-blue-500 hover:text-white rounded-xl transition duration-300 ease-linear {{request()->routeIs('admin.information.index') ? 'bg-blue-500 text-white' : ''}}" 
                    href="{{ route('admin.information.index') }}">Список информации</a>
             </div>
             <div class="border-l border-blue-200 ms-2">
-                <a class="p-2 ms-2 flex hover:bg-blue-500 hover:text-white rounded-xl transition duration-300 ease-linear {{request()->routeIs('admin.gallery.create') ? 'bg-blue-500 text-white' : ''}}" 
+                <a class="p-2 ms-2 flex hover:bg-blue-500 hover:text-white rounded-xl transition duration-300 ease-linear {{request()->routeIs('admin.information.create') ? 'bg-blue-500 text-white' : ''}}" 
                    href="{{ route('admin.information.create') }}">Добавить информацию</a>
             </div>
         </div>

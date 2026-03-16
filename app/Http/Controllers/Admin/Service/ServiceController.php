@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Admin\Service;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use App\Services\ServiceService;
 use App\Models\Service;
+use App\Services\ServiceService;
+use Illuminate\Http\Request;
 
 class ServiceController extends Controller
 {
@@ -20,17 +19,12 @@ class ServiceController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
-        
         $services = Service::query()
-            ->when($search, function ($query) use ($search) {
-                $query->where('name', 'like', '%' . $search . '%');
-            })
+            ->when($search, fn($q) => $q->where('name', 'like', '%' . $search . '%'))
             ->latest()
             ->get();
 
-        $hasSearchQuery = $request->has('search') && !empty($search);
-
-        return view('admin.services.index', compact('services', 'search', 'hasSearchQuery'));
+        return view('admin.services.index', compact('services', 'search'));
     }
 
     public function create()
@@ -38,16 +32,13 @@ class ServiceController extends Controller
         return view('admin.services.create');
     }
 
-    public function store(Request $request, ServiceService $serviceService)
+    public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name'        => 'required|string|max:255',
-            'description' => 'required|string',
-            'photos.*'    => 'image|mimes:jpeg,png,jpg,webp|max:5120',
-        ]);
+        $this->validateService($request);
 
-        $serviceService->createService(
-            $request->only(['name', 'description']), 
+        $this->serviceService->createService(
+            $request->only(['name', 'description']),
+            $request->file('main_photo'),
             $request->file('photos')
         );
 
@@ -60,30 +51,35 @@ class ServiceController extends Controller
         return view('admin.services.create', compact('service'));
     }
 
-    public function update(Request $request, Service $service, ServiceService $serviceService)
+    public function update(Request $request, Service $service)
     {
-        $validated = $request->validate([
-            'name'        => 'required|string|max:255',
-            'description' => 'required|string',
-            'photos.*'    => 'image|mimes:jpeg,png,jpg,webp|max:5120',
-            'remove_images' => 'nullable|array',
-        ]);
+        $this->validateService($request);
 
-        $serviceService->updateService(
+        $this->serviceService->updateService(
             $service,
             $request->only(['name', 'description']),
+            $request->file('main_photo'),
             $request->file('photos'),
             $request->input('remove_images', [])
         );
 
         return redirect()->route('admin.services.index')->with('success', 'Услуга обновлена!');
     }
-    public function destroy($id, ServiceService $serviceService)
-    {
-        $service = Service::findOrFail($id);
-        
-        $serviceService->deleteService($service);
 
-        return redirect()->back()->with('success', 'Категория и все её изображения успешно удалены!');
+    public function destroy(Service $service)
+    {
+        $this->serviceService->deleteService($service);
+        return redirect()->back()->with('success', 'Услуга удалена!');
+    }
+
+    protected function validateService(Request $request)
+    {
+        return $request->validate([
+            'name'          => 'required|string|max:255',
+            'description'   => 'required|string',
+            'main_photo'    => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'photos.*'      => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'remove_images' => 'nullable|array',
+        ]);
     }
 }

@@ -4,13 +4,12 @@ namespace App\Http\Controllers\Admin\News;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use App\Services\NewsService;
 use App\Models\News;
 
 class NewsController extends Controller
 {
-    protected $newsService;
+    protected NewsService $newsService;
 
     public function __construct(NewsService $newsService)
     {
@@ -20,17 +19,12 @@ class NewsController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
-        
         $news = News::query()
-            ->when($search, function ($query) use ($search) {
-                $query->where('title', 'like', '%' . $search . '%');
-            })
+            ->when($search, fn($q) => $q->where('title', 'like', '%' . $search . '%'))
             ->latest()
             ->get();
 
-        $hasSearchQuery = $request->has('search') && !empty($search);
-
-        return view('admin.news.index', compact('news', 'search', 'hasSearchQuery'));
+        return view('admin.news.index', compact('news', 'search'));
     }
 
     public function create()
@@ -38,16 +32,13 @@ class NewsController extends Controller
         return view('admin.news.create');
     }
 
-    public function store(Request $request, NewsService $newsService)
+    public function store(Request $request)
     {
-        $validated = $request->validate([
-            'title'        => 'required|string|max:255',
-            'description' => 'required|string',
-            'photos.*'    => 'image|mimes:jpeg,png,jpg,webp|max:5120',
-        ]);
+        $this->validateNews($request);
 
-        $newsService->createNews(
-            $request->only(['title', 'description']), 
+        $this->newsService->createNews(
+            $request->only(['title', 'description']),
+            $request->file('main_photo'),
             $request->file('photos')
         );
 
@@ -60,31 +51,35 @@ class NewsController extends Controller
         return view('admin.news.create', compact('news'));
     }
 
-    public function update(Request $request, News $news, NewsService $newsService)
+    public function update(Request $request, News $news)
     {
-        \Log::info('Пришедшие ID на удаление:', $request->input('remove_images', []));
-        $validated = $request->validate([
-            'title'        => 'required|string|max:255',
-            'description' => 'required|string',
-            'photos.*'    => 'image|mimes:jpeg,png,jpg,webp|max:5120',
-            'remove_images' => 'nullable|array',
-        ]);
+        $this->validateNews($request);
 
-        $newsService->updateNews(
+        $this->newsService->updateNews(
             $news,
             $request->only(['title', 'description']),
+            $request->file('main_photo'),
             $request->file('photos'),
             $request->input('remove_images', [])
         );
 
         return redirect()->route('admin.news.index')->with('success', 'Новость обновлена!');
     }
-    public function destroy($id, NewsService $newsService)
-    {
-        $news = News::findOrFail($id);
-        
-        $newsService->deleteNews($news);
 
-        return redirect()->back()->with('success', 'Категория и все её изображения успешно удалены!');
+    public function destroy(News $news)
+    {
+        $this->newsService->deleteNews($news);
+        return redirect()->back()->with('success', 'Новость удалена!');
+    }
+
+    protected function validateNews(Request $request)
+    {
+        return $request->validate([
+            'title'         => 'required|string|max:255',
+            'description'   => 'required|string',
+            'main_photo'    => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'photos.*'      => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'remove_images' => 'nullable|array',
+        ]);
     }
 }

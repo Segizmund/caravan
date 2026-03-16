@@ -2,8 +2,11 @@
 namespace App\Services;
 
 use App\Models\Trailer;
+use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\UploadedFile;
+use App\Services\SlugService;
 
 class TrailerService
 {
@@ -15,63 +18,62 @@ class TrailerService
         }])->findOrFail($id);
     }
 
-    // Получение списка прицепов для каталога //
-    public function getAllTrailers()
+    public function createTrailer(array $data, ?UploadedFile $mainPhoto = null, ?array $galleryFiles = null): Trailer
     {
-        return Trailer::latest()->get();
-    }
-
-    public function createTrailer(array $data, ?array $files = null): Trailer
-    {
-        $slug = Str::slug($data['name']);
-        $originalSlug = $slug;
-        $count = 1;
-        
-        while (Trailer::where('slug', $slug)->exists()) {
-            $slug = $originalSlug . '-' . $count++;
-        }
-        $data['slug'] = $slug;
+        $data['slug'] = SlugService::generate($data['name'], Trailer::class);
 
         $trailer = Trailer::create($data);
 
-        if ($files) {
-            foreach ($files as $index => $photo) {
+        // Сохраняем главное фото
+        if ($mainPhoto) {
+            $path = $mainPhoto->store('trailers', 'public');
+            $trailer->images()->create(['path' => $path, 'is_main' => true]);
+        }
+
+        // Сохраняем галерею
+        if ($galleryFiles) {
+            foreach ($galleryFiles as $photo) {
                 $path = $photo->store('trailers', 'public');
-                $trailer->images()->create([
-                    'path' => $path,
-                    'is_main' => ($index === 0)
-                ]);
+                $trailer->images()->create(['path' => $path, 'is_main' => false]);
             }
         }
 
         return $trailer;
     }
 
-    public function updateTrailer(Trailer $trailer, array $data, ?array $files, array $removeImageIds)
+    public function updateTrailer(Trailer $trailer, array $data, ?UploadedFile $mainPhoto = null, ?array $galleryFiles = null, array $removeImageIds = [])
     {
-        $slug = Str::slug($data['name']);
-        $originalSlug = $slug;
-        $count = 1;
-
-        while (Trailer::where('slug', $slug)->where('id', '!=', $trailer->id)->exists()) {
-            $slug = $originalSlug . '-' . $count++;
+        // Обновление данных
+        if (isset($data['name']) && $data['name'] !== $trailer->name) {
+            $data['slug'] = SlugService::generate($data['name'], Trailer::class, $trailer->id);
         }
-        $data['slug'] = $slug;
-        
         $trailer->update($data);
 
+        // Обработка замены ГЛАВНОГО фото
+        if ($mainPhoto) {
+            $oldMain = $trailer->images()->where('is_main', true)->first();
+            if ($oldMain) {
+                Storage::disk('public')->delete($oldMain->path);
+                $oldMain->delete();
+            }
+            $path = $mainPhoto->store('trailers', 'public');
+            $trailer->images()->create(['path' => $path, 'is_main' => true]);
+        }
+
+        // Удаление выбранных фото из галереи
         if (!empty($removeImageIds)) {
             $images = $trailer->images()->whereIn('id', $removeImageIds)->get();
             foreach ($images as $image) {
-                \Storage::disk('public')->delete($image->path);
+                Storage::disk('public')->delete($image->path);
                 $image->delete();
             }
         }
 
-        if ($files) {
-            foreach ($files as $photo) {
+        // Добавление новых фото в галерею
+        if ($galleryFiles) {
+            foreach ($galleryFiles as $photo) {
                 $path = $photo->store('trailers', 'public');
-                $trailer->images()->create(['path' => $path]);
+                $trailer->images()->create(['path' => $path, 'is_main' => false]);
             }
         }
     }
@@ -88,4 +90,31 @@ class TrailerService
 
         $trailer->delete();
     }
+
+    // --- Публичная часть ---
+    public function getPaginatedTrailers(int $perPage = 12)
+    {
+        return Trailer::with(['images' => function($query) {
+            $query->where('is_main', true);
+        }])->latest()->paginate($perPage);
+    }
+
+    public function getPaginatedTrailersGrouped(int $perPageCategories = 3)
+    {
+        return Category::whereHas('trailers')
+            ->with(['trailers' => function ($query) {
+                $query->with(['images' => fn($q) => $q->where('is_main', true)])
+                    ->take(6);
+            }])
+            ->paginate($perPageCategories);
+    }
+
+    public function getTrailersByCategoryIdPaginated(int $categoryId, int $page = 1)
+    {
+        return Trailer::where('category_id', $categoryId)
+            ->with(['images' => fn($q) => $q->where('is_main', true)])
+            ->latest()
+            ->paginate(6, ['*'], 'page', $page);
+    }
+
 }

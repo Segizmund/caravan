@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
-            $table->string('author_name'); // Имя
-            $table->string('email');       // Почта
-            $table->text('comment');       // Текст отзыва
-            $table->integer('rating');     // Оценка от 1 до 5
+            $table->string('author_name');
+            $table->string('email');
+            $table->text('comment');
+            $table->integer('rating');
             
-            $table->morphs('reviewable'); // Связь
-            $table->boolean('is_approved')->default(false); // Модерация
+            $table->morphs('reviewable');
+            $table->boolean('is_approved')->default(false);
             
             $table->timestamps();
         });
