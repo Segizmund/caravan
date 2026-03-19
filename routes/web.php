@@ -18,7 +18,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
 
-    Route::get('/dashboard', function () {
+    Route::get('/', function () {
         return view('dashboard');
     })->name('dashboard');
     
@@ -26,17 +26,17 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/trailers', [Admin\Trailers\TrailerController::class, 'index'])->name('trailers.index');
     Route::get('/trailers/create', [Admin\Trailers\TrailerController::class, 'create'])->name('trailers.create');
     Route::post('/trailers', [Admin\Trailers\TrailerController::class, 'store'])->name('trailers.store');
-    Route::get('/trailers/{trailer}/edit', [Admin\Trailers\TrailerController::class, 'edit'])->name('trailers.edit');
-    Route::put('/trailers/{trailer}', [Admin\Trailers\TrailerController::class, 'update'])->name('trailers.update');
-    Route::delete('/trailers/{trailer}', [Admin\Trailers\TrailerController::class, 'destroy'])->name('trailers.destroy');
+    Route::get('/trailers/{trailer:id}/edit', [Admin\Trailers\TrailerController::class, 'edit'])->name('trailers.edit');
+    Route::put('/trailers/{trailer:id}', [Admin\Trailers\TrailerController::class, 'update'])->name('trailers.update');
+    Route::delete('/trailers/{trailer:id}', [Admin\Trailers\TrailerController::class, 'destroy'])->name('trailers.destroy');
 
     // --- Управление услугами ---
     Route::get('/services', [Admin\Service\ServiceController::class, 'index'])->name('services.index');
     Route::get('/services/create', [Admin\Service\ServiceController::class, 'create'])->name('services.create');
     Route::post('/services', [Admin\Service\ServiceController::class, 'store'])->name('services.store');
-    Route::get('/services/{service}/edit', [Admin\Service\ServiceController::class, 'edit'])->name('services.edit');
-    Route::put('/services/{service}', [Admin\Service\ServiceController::class, 'update'])->name('services.update');
-    Route::delete('/services/{service}', [Admin\Service\ServiceController::class, 'destroy'])->name('services.destroy');
+    Route::get('/services/{service:id}/edit', [Admin\Service\ServiceController::class, 'edit'])->name('services.edit');
+    Route::put('/services/{service:id}', [Admin\Service\ServiceController::class, 'update'])->name('services.update');
+    Route::delete('/services/{service:id}', [Admin\Service\ServiceController::class, 'destroy'])->name('services.destroy');
 
     // --- Управление опциями ---
     Route::get('/options', [Admin\Trailers\OptionController::class, 'index'])->name('options.index');
@@ -47,17 +47,17 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/categories', [Admin\Category\CategoryController::class, 'index'])->name('categories.index');
     Route::get('/categories/create', [Admin\Category\CategoryController::class, 'create'])->name('categories.create');
     Route::post('/categories/store', [Admin\Category\CategoryController::class, 'store'])->name('categories.store');
-    Route::get('/categories/{category}/edit', [Admin\Category\CategoryController::class, 'edit'])->name('categories.edit');
-    Route::put('/categories/{category}', [Admin\Category\CategoryController::class, 'update'])->name('categories.update');
-    Route::delete('/categories/{category}', [Admin\Category\CategoryController::class, 'destroy'])->name('categories.destroy');
+    Route::get('/categories/{category:id}/edit', [Admin\Category\CategoryController::class, 'edit'])->name('categories.edit');
+    Route::put('/categories/{category:id}', [Admin\Category\CategoryController::class, 'update'])->name('categories.update');
+    Route::delete('/categories/{category:id}', [Admin\Category\CategoryController::class, 'destroy'])->name('categories.destroy');
     
     // --- Управление новостями ---
     Route::get('/news', [Admin\News\NewsController::class, 'index'])->name('news.index');
     Route::get('/news/create', [Admin\News\NewsController::class, 'create'])->name('news.create');
     Route::post('/news/store', [Admin\News\NewsController::class, 'store'])->name('news.store');
-    Route::get('/news/{news}/edit', [Admin\News\NewsController::class, 'edit'])->name('news.edit');
-    Route::put('/news/{news}', [Admin\News\NewsController::class, 'update'])->name('news.update');
-    Route::delete('/news/{news}', [Admin\News\NewsController::class, 'destroy'])->name('news.destroy');
+    Route::get('/news/{news:id}/edit', [Admin\News\NewsController::class, 'edit'])->name('news.edit');
+    Route::put('/news/{news:id}', [Admin\News\NewsController::class, 'update'])->name('news.update');
+    Route::delete('/news/{news:id}', [Admin\News\NewsController::class, 'destroy'])->name('news.destroy');
 
     // --- Управление галереей ---
     Route::get('/gallery', [Admin\Gallery\GalleryController::class, 'index'])->name('gallery.index');
@@ -69,20 +69,40 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/information', [Admin\Information\InformationController::class, 'index'])->name('information.index');
     Route::get('/information/create', [Admin\Information\InformationController::class, 'create'])->name('information.create');
     Route::post('/information/store', [Admin\Information\InformationController::class, 'store'])->name('information.store');
-    Route::get('/information/{information}/edit', [Admin\Information\InformationController::class, 'edit'])->name('information.edit');
-    Route::put('/information/{information}', [Admin\Information\InformationController::class, 'update'])->name('information.update');
-    Route::delete('/information/{information}', [Admin\Information\InformationController::class, 'destroy'])->name('information.destroy');
+    Route::get('/information/{information:id}/edit', [Admin\Information\InformationController::class, 'edit'])->name('information.edit');
+    Route::put('/information/{information:id}', [Admin\Information\InformationController::class, 'update'])->name('information.update');
+    Route::delete('/information/{information:id}', [Admin\Information\InformationController::class, 'destroy'])->name('information.destroy');
 
     // --- Управление настройками ---
     Route::get('/settings', [Admin\Settings\SettingController::class, 'index'])->name('settings.index');
     Route::put('/settings', [Admin\Settings\SettingController::class, 'update'])->name('settings.update');
+
+    Route::get('/reviews', [Admin\Reviews\ReviewController::class, 'index'])->name('reviews.index');
+    Route::patch('/reviews/{review}/toggle', [Admin\Reviews\ReviewController::class, 'toggle'])->name('reviews.toggle');
+    Route::delete('/reviews/{review}', [Admin\Reviews\ReviewController::class, 'destroy'])->name('reviews.destroy');
 });
 
 // --- Публичная часть ---
 
 Route::get('/', [Frontend\Home\HomeController::class, 'index'])->name('home.index');
+
 Route::get('/trailers', [Frontend\Trailer\TrailerController::class, 'index'])->name('trailer.index');
+Route::get('/trailers/trailer/{trailer}', [Frontend\Trailer\TrailerController::class, 'show'])->name('trailers.show');
+
 Route::get('/services', [Frontend\Service\ServiceController::class, 'index'])->name('service.index');
+Route::get('/services/service/{service}', [Frontend\Service\ServiceController::class, 'show'])->name('service.show');
+
+Route::get('/information', [Frontend\Information\InformationController::class, 'index'])->name('information.index');
+Route::get('/information/information/{information}', [Frontend\Information\InformationController::class, 'show'])->name('information.show');
+
+Route::get('/news', [Frontend\News\NewsController::class, 'index'])->name('news.index');
+Route::get('/news/news/{news}', [Frontend\News\NewsController::class, 'show'])->name('news.show');
+
+Route::get('/gallery', [Frontend\Gallery\GalleryController::class, 'index'])->name('gallery.index');
+
+Route::post('/reviews', [Frontend\Review\ReviewController::class, 'store'])->name('reviews.store');
+
+Route::get('/contacts', [Frontend\Contacts\ContactsController::class, 'index'])->name('contacts.index');
 
 Route::get('/trailers/category/{categoryId}/load-more', [Frontend\Trailer\TrailerController::class, 'loadMore'])->name('trailers.load-more');
 

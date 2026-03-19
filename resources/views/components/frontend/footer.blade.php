@@ -50,6 +50,11 @@
             <div class="flex flex-col gap-4 sm:items-center mt-4">
                 <h4 class="font-bold text-white sm:text-center">Выбирая наши прицепы, Вы всегда можете быть уверены в правильности своего решения!</h4>
                 <span class="text-white sm:text-center">Свяжитесь с нами и мы поможем Вам подобрать оптимальный вариант Вашего прицепа!</span>
+                @if($settings->address)
+                    <span class="text-white font-bold">
+                        Ищите нас по адресу: {{$settings->address}}
+                    </span>
+                @endif
             </div>
         </div>
     </div>

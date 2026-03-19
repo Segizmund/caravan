@@ -29,9 +29,7 @@
             const placeholder = container.querySelector('#placeholder-text');
             
             reader.onload = (e) => {
-                // Если есть текст-плейсхолдер, удаляем его
                 if (placeholder) placeholder.remove();
-                // Вставляем картинку или обновляем существующую
                 const img = container.querySelector('img') || document.createElement('img');
                 img.src = e.target.result;
                 img.className = 'h-full w-full object-cover';

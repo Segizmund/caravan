@@ -29,6 +29,10 @@
             <label class="block text-sm font-medium text-gray-700">Почта</label>
             <input class="w-full mt-1 rounded border-gray-300" type="email" name="email" value="{{ old('email', $settings->email) }}">
         </div>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Адрес</label>
+            <input class="w-full mt-1 rounded border-gray-300" type="text" name="address" value="{{ old('address', $settings->address) }}">
+        </div>
         
         <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded text-sm hover:bg-indigo-700">
             Сохранить

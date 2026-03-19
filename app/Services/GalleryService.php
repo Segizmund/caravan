@@ -29,4 +29,18 @@ class GalleryService
         Storage::disk('public')->delete($image->path);
         $image->delete();
     }
+
+    public function getGalleryWithImages(int $perPage = 12): array
+    {
+        $gallery = Gallery::firstOrCreate(['id' => 1]);
+        
+        $images = $image = $gallery->images()
+            ->latest()
+            ->paginate($perPage);
+
+        return [
+            'gallery' => $gallery,
+            'images'  => $images,
+        ];
+    }
 }

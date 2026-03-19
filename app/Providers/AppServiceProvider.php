@@ -8,6 +8,8 @@ use App\Models\Image;
 use App\Models\News;
 use App\Models\Setting;
 use App\Models\Information;
+use App\Models\Service;
+use App\Models\Category;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -40,6 +42,18 @@ class AppServiceProvider extends ServiceProvider
 
         View::composer('*', function ($view) {
             $view->with('settings', Setting::find(1) ?? new Setting());
+        });
+
+        View::composer('components.frontend.short-services', function ($view) {
+            $view->with([
+                'services'   => Service::inRandomOrder()->take(4)->get(),
+            ]);
+        });
+
+        View::composer('components.frontend.short-categories', function ($view) {
+            $view->with([
+                'categories' => Category::inRandomOrder()->take(3)->get(),
+            ]);
         });
 
     }

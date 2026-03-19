@@ -46,4 +46,17 @@ class InformationService
         $information->delete();
     }
 
+    // --- Публичная часть ---- //
+    public function getAllInformation()
+    {
+        return Information::paginate(12);
+    }
+
+    public function getInformationDetails(Information $information): array
+    {
+        return [
+            'information' => $information,
+        ];
+    }
+
 }

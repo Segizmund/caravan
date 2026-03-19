@@ -12,7 +12,9 @@ class Review extends Model
         'email', 
         'comment', 
         'rating',  
-        'is_approved'
+        'is_approved',
+        'reviewable_id',
+        'reviewable_type'
     ];
 
     // Полиморфная связь "в обратную сторону"

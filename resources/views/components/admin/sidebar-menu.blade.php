@@ -16,6 +16,13 @@
                href="{{ route('admin.settings.index') }}">Настройки</a>
         </div>
 
+        <div class="flex flex-col gap-2 py-2">
+            <div>
+                <a class="p-2 flex w-full hover:bg-blue-500 hover:text-white rounded-xl transition duration-300 ease-linear {{request()->routeIs('admin.reviews.index') ? 'bg-blue-500 text-white' : ''}}" 
+                   href="{{ route('admin.reviews.index') }}">Список комментариев</a>
+            </div>
+        </div>
+
         <div class="flex flex-col gap-2 border-b border-blue-200 py-2">
             <div>
                 <a class="p-2 flex w-full hover:bg-blue-500 hover:text-white rounded-xl transition duration-300 ease-linear {{request()->routeIs('admin.trailers.index') ? 'bg-blue-500 text-white' : ''}}" 

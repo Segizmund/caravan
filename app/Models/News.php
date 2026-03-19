@@ -23,4 +23,9 @@ class News extends Model
     {
         return $this->images()->where('is_main', true)->first() ?? $this->images()->first();
     }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 }

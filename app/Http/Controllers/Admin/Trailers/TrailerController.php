@@ -113,6 +113,17 @@ class TrailerController extends Controller
             'remove_images' => 'nullable|array',
             'additional_features' => 'nullable|array',
             'additional_features.*' => 'nullable|string|max:255',
+        ], [
+            'name.required' => 'Введите название прицепа.',
+            'price.required' => 'Укажите стоимость.',
+            'category_id.required' => 'Выберите категорию.',
+            
+            'main_photo.image' => 'Основное фото должно быть изображением.',
+            'main_photo.max' => 'Основное фото слишком большое (макс. 5 МБ).',
+            
+            'photos.*.image' => 'Файлы в галерее должны быть изображениями.',
+            'photos.*.max' => 'Одно из фото в галерее превышает 5 МБ.',
+            'photos.*.mimes' => 'Допустимые форматы: JPEG, PNG, JPG, WEBP.',
         ]);
     }
 }

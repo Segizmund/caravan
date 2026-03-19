@@ -73,10 +73,24 @@ class ServiceService
     }
 
     // --- Публичная часть ---- //
-    public function getAllServices()
+    public function getPaginatedServices(int $perPage = 12)
     {
-        return Service::with(['images' => function ($query) {
-            $query->where('is_main', true);
-        }])->get();
+        return Service::with('images')->latest()->paginate($perPage);
+    }
+
+    public function getServiceDetails(Service $service): array
+    {
+        $service->load(['images']);
+
+        $mainImage = $service->images->where('is_main', true)->first() 
+                    ?? $service->images->first();
+                    
+        $additionalImages = $service->images->where('is_main', false);
+
+        return [
+            'service'          => $service,
+            'mainImage'        => $mainImage,
+            'additionalImages' => $additionalImages,
+        ];
     }
 }

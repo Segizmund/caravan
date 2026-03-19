@@ -21,6 +21,23 @@ class Service extends Model
     // Хелпер для получения первой картинки
     public function getMainImageAttribute()
     {
-        return $this->images()->first();
+        return $this->images->where('is_main', true)->first() 
+           ?? $this->images->first();
+    }
+    
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
+    public function reviews()
+    {
+        return $this->morphMany(Review::class, 'reviewable');
+    }
+
+    public function approvedReviews()
+    {
+        return $this->reviews()->where('is_approved', true)->latest();
     }
 }

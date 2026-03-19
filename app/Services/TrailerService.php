@@ -10,14 +10,6 @@ use App\Services\SlugService;
 
 class TrailerService
 {
-    // Получение прицепа со всеми опциями и одобренными отзывами //
-    public function getTrailerDetails(int $id)
-    {
-        return Trailer::with(['options', 'reviews' => function($query) {
-            $query->where('is_approved', true);
-        }])->findOrFail($id);
-    }
-
     public function createTrailer(array $data, ?UploadedFile $mainPhoto = null, ?array $galleryFiles = null): Trailer
     {
         $data['slug'] = SlugService::generate($data['name'], Trailer::class);
@@ -115,6 +107,20 @@ class TrailerService
             ->with(['images' => fn($q) => $q->where('is_main', true)])
             ->latest()
             ->paginate(6, ['*'], 'page', $page);
+    }
+
+    public function getTrailerDetails(Trailer $trailer): array
+    {
+        $trailer->load(['category', 'images']);
+
+        $mainImage = $trailer->images->where('is_main', true)->first();
+        $additionalImages = $trailer->images->where('is_main', false);
+
+        return [
+            'trailer'          => $trailer,
+            'mainImage'        => $mainImage,
+            'additionalImages' => $additionalImages,
+        ];
     }
 
 }

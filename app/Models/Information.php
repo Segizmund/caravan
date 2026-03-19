@@ -11,4 +11,9 @@ class Information extends Model
         'slug', 
         'description'
     ];
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 }

@@ -5,7 +5,7 @@
     <div class="h-full flex flex-col justify-between">
         <div class="flex flex-col gap-4">
             <div>
-                <h2 class="font-bold text-2xl">Каталог</h2>
+                <h2 class="font-bold text-xl xl:text-2xl">Каталог</h2>
             </div>
             @foreach($categories as $category)
                 <div class="flex flex-col gap-6" data-category-id="{{ $category->id }}">
@@ -33,7 +33,7 @@
         
 
         </div>
-        {{-- 2. Вывод ссылок пагинации для категорий --}}
+        {{-- Вывод ссылок пагинации для категорий --}}
         <div class="pagination">
             {{ $categories->links() }}
         </div>

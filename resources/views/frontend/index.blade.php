@@ -2,78 +2,12 @@
 
 @section('content')
     {{-- Услуги --}}
-    <div class="flex flex-col gap-4">
-        <div class="flex items-center justify-between">
-            <h2 class="font-bold text-2xl">Услуги</h2>
-            <a href="#" class="flex items-center gap-2 hover:text-[#e28c00] transition duration-300 ease-linear">
-                Все услуги
-                <span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-arrow-in-up-right" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M6.364 13.5a.5.5 0 0 0 .5.5H13.5a1.5 1.5 0 0 0 1.5-1.5v-10A1.5 1.5 0 0 0 13.5 1h-10A1.5 1.5 0 0 0 2 2.5v6.636a.5.5 0 1 0 1 0V2.5a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v10a.5.5 0 0 1-.5.5H6.864a.5.5 0 0 0-.5.5"/>
-                        <path fill-rule="evenodd" d="M11 5.5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793l-8.147 8.146a.5.5 0 0 0 .708.708L10 6.707V10.5a.5.5 0 0 0 1 0z"/>
-                    </svg>
-                </span>
-            </a>
-        </div>
-        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            @forelse ($services as $service)
-                <a href="#" class="rounded-lg h-[120px] relative overflow-hidden">
-                    @if($service->main_image)
-                        <img src="{{ asset('storage/' . $service->main_image->path) }}" 
-                            alt="{{ $service->name }}" 
-                            class="w-full h-full object-cover rounded-lg">
-                    @else
-                        <div class="w-full h-full bg-gray-200 flex items-center justify-center rounded-lg">Нет фото</div>
-                    @endif
-                    <div class="card-black-glass absolute bottom-0 left-0 w-full py-1.5 flex justify-center">
-                        <span class="text-white font-semibold">{{ $service->name }}</span>
-                    </div>
-                </a>
-            @empty
-                <div class="col-span-4">
-                    <span>В данный момент нет ниодной активной услуги.</span>
-                </div>
-            @endforelse
-        </div>
-    </div>
+    <x-frontend.short-services/>
     {{-- Прицепы --}}
-    <div class="flex flex-col gap-4">
-        <div class="flex items-center justify-between">
-            <h2 class="font-bold text-2xl">Прицепы</h2>
-            <a href="#" class="flex items-center gap-2 hover:text-[#e28c00] transition duration-300 ease-linear">
-                Все прицепы
-                <span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-arrow-in-up-right" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M6.364 13.5a.5.5 0 0 0 .5.5H13.5a1.5 1.5 0 0 0 1.5-1.5v-10A1.5 1.5 0 0 0 13.5 1h-10A1.5 1.5 0 0 0 2 2.5v6.636a.5.5 0 1 0 1 0V2.5a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v10a.5.5 0 0 1-.5.5H6.864a.5.5 0 0 0-.5.5"/>
-                        <path fill-rule="evenodd" d="M11 5.5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793l-8.147 8.146a.5.5 0 0 0 .708.708L10 6.707V10.5a.5.5 0 0 0 1 0z"/>
-                    </svg>
-                </span>
-            </a>
-        </div>
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            @forelse ($categories as $category)
-                <a href="#" class="rounded-lg h-[150px] xl:h-[200px] 2xl:h-[280px] relative overflow-hidden">
-                    @if($category->main_image)
-                        <img src="{{ asset('storage/' . $category->main_image->path) }}" 
-                            alt="{{ $category->name }}" 
-                            class="w-full h-full object-cover rounded-lg">
-                    @else
-                        <div class="w-full h-full bg-gray-200 flex items-center justify-center rounded-lg">Нет фото</div>
-                    @endif
-                    <div class="card-black-glass absolute bottom-0 left-0 w-full py-6 flex justify-center">
-                        <span class="text-white font-semibold">{{ $category->name }}</span>
-                    </div>
-                </a>
-            @empty
-                <div class="col-span-4">
-                    <span>В данный момент нет прицепов.</span>
-                </div>
-            @endforelse
-        </div>
-    </div>
+    <x-frontend.short-categories/>
     {{-- О предприятии --}}
     <div class="flex flex-col gap-4">
-        <h2 class="font-bold text-2xl">О предприятии</h2>
+        <h2 class="font-bold text-xl xl:text-2xl">О предприятии</h2>
         <div class="grid lg:grid-cols-[55%_auto] gap-8">
             <div class="flex flex-col gap-5">
                 <p>
@@ -101,7 +35,7 @@
     </div>
     {{-- О производстве --}}
     <div class="flex flex-col gap-4">
-        <h2 class="font-bold text-2xl">О производстве</h2>
+        <h2 class="font-bold text-xl xl:text-2xl">О производстве</h2>
         <div class="grid lg:grid-cols-[55%_auto] gap-8 bg-white px-5 py-3 rounded-lg">
             <div class="grid grid-cols-3 md:grid-cols-1 lg:grid-cols-3 gap-4 lg:h-[270px]">
                 <div>
@@ -140,29 +74,61 @@
     {{-- Галерея --}}
     <div class="flex flex-col gap-4">
         <div class="flex items-center justify-between">
-            <h2 class="font-bold text-2xl">Галерея</h2>
-            <a href="#" class="flex items-center gap-2 hover:text-[#e28c00] transition duration-300 ease-linear">
+            <h2 class="font-bold text-xl xl:text-2xl text-gray-900">Галерея</h2>
+            <a href="{{route('gallery.index')}}" class="flex items-center gap-2 text-gray-600 hover:text-[#e28c00] transition duration-300 ease-linear group">
                 Все фото
-                <span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-arrow-in-up-right" viewBox="0 0 16 16">
+                <span class="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M6.364 13.5a.5.5 0 0 0 .5.5H13.5a1.5 1.5 0 0 0 1.5-1.5v-10A1.5 1.5 0 0 0 13.5 1h-10A1.5 1.5 0 0 0 2 2.5v6.636a.5.5 0 1 0 1 0V2.5a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v10a.5.5 0 0 1-.5.5H6.864a.5.5 0 0 0-.5.5"/>
                         <path fill-rule="evenodd" d="M11 5.5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793l-8.147 8.146a.5.5 0 0 0 .708.708L10 6.707V10.5a.5.5 0 0 0 1 0z"/>
                     </svg>
                 </span>
             </a>
         </div>
-        <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             @forelse ($gallery as $item)
-                <a href="#" class="rounded-lg h-[180px] xl:h-[200px] 2xl:h-[230px] relative overflow-hidden">
+                <a href="{{ asset('storage/' . $item->path) }}" 
+                   data-fancybox="main-gallery" 
+                   class="group relative h-[180px] xl:h-[200px] 2xl:h-[230px] overflow-hidden rounded-xl bg-gray-100 shadow-sm hover:shadow-md transition-all duration-300">
+                    
+                    {{-- Само изображение --}}
                     <img src="{{ asset('storage/' . $item->path) }}" 
-                        alt="Фото из галереи" 
-                        class="w-full h-full object-cover rounded-lg">
+                        alt="Фото МЗАП Караван" 
+                        class="w-full h-full object-cover transition duration-500 group-hover:scale-110">
+                    
+                    {{-- Слой при наведении (zoom-иконка) --}}
+                    <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="white" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                        </svg>
+                    </div>
                 </a>
             @empty
-                <div class="col-span-4">
-                    <span>В данный момент нет ниодной фото в галереи.</span>
+                <div class="col-span-full py-12 text-center bg-white rounded-xl border-2 border-dashed border-gray-200">
+                    <span class="text-gray-400 font-medium">В данный момент фотографий в галерее нет.</span>
                 </div>
             @endforelse
         </div>
     </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if (typeof Fancybox !== "undefined") {
+            
+            Fancybox.bind("[data-fancybox]", {
+                infinite: true,
+                dragToClose: true,
+                compact: false,
+                showClass: "f-fadeIn",
+                
+                l10n: {
+                    CLOSE: "Закрыть",
+                    NEXT: "Следующий",
+                    PREV: "Предыдущий",
+                },
+            });
+
+        }
+    });
+</script>
 @endsection

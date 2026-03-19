@@ -2,7 +2,7 @@
     <div class="flex flex-col gap-4">
         <div class="flex items-center justify-between">
             <h2 class="font-bold text-2xl">Информация</h2>
-            <a href="#" class="flex items-center gap-2 hover:text-[#e28c00] transition duration-300 ease-linear">
+            <a href="{{route('information.index')}}" class="flex items-center gap-2 hover:text-[#e28c00] transition duration-300 ease-linear">
                 Еще
                 <span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-arrow-in-up-right" viewBox="0 0 16 16">
@@ -14,7 +14,7 @@
         </div>
         <div class="flex flex-col gap-3">
             @forelse ($sidebarInfo as $info)
-                <a href="#" class="rounded-lg bg-white py-3 px-6">
+                <a href="{{route('information.show', $info)}}" class="rounded-lg bg-white py-3 px-6 hover:text-[#e28c00] transition duration-300 ease-linear">
                     <span class="font-medium">{{ $info->title }}</span>
                 </a>
             @empty
@@ -28,7 +28,7 @@
     <div class="flex flex-col gap-4">
         <div class="flex items-center justify-between">
             <h2 class="font-bold text-2xl">Обновления</h2>
-            <a href="#" class="flex items-center gap-2 hover:text-[#e28c00] transition duration-300 ease-linear">
+            <a href="{{route('news.index')}}" class="flex items-center gap-2 hover:text-[#e28c00] transition duration-300 ease-linear">
                 Еще
                 <span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-arrow-in-up-right" viewBox="0 0 16 16">
@@ -40,7 +40,7 @@
         </div>
         <div class="flex flex-col gap-3">
             @forelse ($sidebarNews as $news)
-                <a href="#" class="rounded-lg h-[150px] relative overflow-hidden">
+                <a href="{{route('news.show', $news)}}" class="rounded-lg h-[150px] relative overflow-hidden hover:opacity-80 transition duration-300 ease-linear">
                     @if($news->main_image)
                         <img src="{{ asset('storage/' . $news->main_image->path) }}" 
                             alt="{{ $news->title }}" 

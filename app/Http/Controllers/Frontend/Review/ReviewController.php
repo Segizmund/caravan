@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Frontend;
+namespace App\Http\Controllers\Frontend\Review;
 
+use App\Http\Controllers\Controller;
 use App\Services\ReviewService;
 use Illuminate\Http\Request;
 
@@ -16,6 +17,7 @@ class ReviewController extends Controller
 
     public function store(Request $request)
     {
+        
         $validated = $request->validate([
             'author_name'     => 'required|string|max:255',
             'email'           => 'required|email',
@@ -24,7 +26,16 @@ class ReviewController extends Controller
             'reviewable_id'   => 'required|integer',
             'reviewable_type' => 'required|string',
             'images'          => 'array|max:3',
-            'images.*'        => 'image|mimes:jpeg,png,jpg|max:2048',
+            'images.*'        => 'image|mimes:jpeg,png,jpg|max:5120',
+        ], [
+            'images.max' => 'Можно загрузить не более 3-х фотографий.',
+            
+            'images.*.max' => 'Превышен размер фото. Доступно не более 5 МБ.',
+            'images.*.image' => 'Файл должен быть изображением.',
+            'images.*.mimes' => 'Допустимые форматы: JPEG, JPG, PNG.',
+            
+            'author_name.required' => 'Пожалуйста, введите ваше имя.',
+            'comment.required' => 'Напишите текст вашего отзыва.',
         ]);
 
         $this->reviewService->createReview($validated, $request->file('images', []));

@@ -71,4 +71,27 @@ class NewsService
         $news->images()->delete();
         $news->delete();
     }
+
+    // --- Публичная часть ---- //
+    public function getAllNews()
+    {
+        $news = News::with('images')->latest()->paginate(12);
+        return ['news' => $news];
+    }
+
+    public function getNewsDetails(News $news): array
+    {
+        $news->load(['images']);
+
+        $mainImage = $news->images->where('is_main', true)->first() 
+                    ?? $news->images->first();
+                    
+        $additionalImages = $news->images->where('is_main', false);
+
+        return [
+            'news'          => $news,
+            'mainImage'        => $mainImage,
+            'additionalImages' => $additionalImages,
+        ];
+    }
 }

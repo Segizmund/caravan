@@ -22,7 +22,7 @@
                 <label class="block text-sm font-medium text-gray-700">Категория</label>
                 <div class="grid grid-cols-2 gap-5">
                     <div>
-                        <select name="category_id" class="mt-1 w-full rounded border-gray-300">
+                        <select required name="category_id" class="mt-1 w-full rounded border-gray-300">
                             <option value="">Выберите категорию</option>
                             @foreach($categories as $category)
                                 <option value="{{ $category->id }}" {{ old('category_id', $trailer->category_id ?? '') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
@@ -43,12 +43,12 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="col-span-2">
                     <label class="block text-sm font-medium text-gray-700">Название модели</label>
-                    <input type="text" name="name" value="{{ old('name', $trailer->name ?? '') }}" class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
+                    <input type="text" name="name" required value="{{ old('name', $trailer->name ?? '') }}" class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Цена (₽)</label>
-                    <input type="number" step="0.01" name="price" value="{{ old('price', $trailer->price ?? '') }}" class="mt-1 w-full rounded-md border-gray-300 shadow-sm" required>
+                    <input type="number" required step="0.01" name="price" value="{{ old('price', $trailer->price ?? '') }}" class="mt-1 w-full rounded-md border-gray-300 shadow-sm" required>
                 </div>
 
                 <div class="col-span-2 border-t border-gray-100 pt-4">

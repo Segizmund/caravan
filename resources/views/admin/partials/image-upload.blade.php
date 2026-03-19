@@ -13,7 +13,7 @@
 
     <div id="existing-images-container" class="mt-4 grid grid-cols-3 md:grid-cols-5 gap-4">
         @if(isset($model) && $model->images)
-            @foreach($model->images as $image)
+            @foreach($model->images->where('is_main', '!=', 1) as $image)
                 <div class="relative group" id="image-row-{{ $image->id }}">
                     <img src="{{ asset('storage/' . $image->path) }}" class="h-24 w-full object-cover rounded-md border">
                     <button type="button" onclick="removeExistingImage({{ $image->id }})" 

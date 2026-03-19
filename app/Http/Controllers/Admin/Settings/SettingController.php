@@ -28,6 +28,7 @@ class SettingController extends Controller
             'first_phone'   => 'nullable|string|max:20',
             'second_phone' => 'nullable|string|max:20',
             'email'          => 'nullable|email|max:255',
+            'address'       => 'nullable|string|max:50',
         ]);
 
         $this->settingsService->updateSettings($validated);

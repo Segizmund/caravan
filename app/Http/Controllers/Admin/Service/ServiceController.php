@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class ServiceController extends Controller
 {
-    protected $serviceService;
+    protected ServiceService $serviceService;
 
     public function __construct(ServiceService $serviceService)
     {
@@ -80,6 +80,17 @@ class ServiceController extends Controller
             'main_photo'    => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
             'photos.*'      => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
             'remove_images' => 'nullable|array',
+        ],[
+            'name.required'        => 'Введите название.',
+            'description.required' => 'Заполните описание.',
+            
+            'main_photo.image'     => 'Файл должен быть изображением.',
+            'main_photo.mimes'     => 'Допустимые форматы: JPEG, PNG, JPG, WEBP.',
+            'main_photo.max'       => 'Главное фото слишком большое (макс. 5 МБ).',
+            
+            'photos.*.image'       => 'Один из файлов в галерее не является изображением.',
+            'photos.*.mimes'       => 'В галерее разрешены только JPEG, PNG, JPG, WEBP.',
+            'photos.*.max'         => 'Фото в галерее превышает лимит 5 МБ.',
         ]);
     }
 }

@@ -9,6 +9,7 @@ class Setting extends Model
     protected $fillable = [
         'first_phone', 
         'second_phone', 
-        'email'
+        'email',
+        'address'
     ];
 }

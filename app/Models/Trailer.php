@@ -36,11 +36,6 @@ class Trailer extends Model
         return $this->belongsToMany(Option::class, 'option_trailer');
     }
 
-    // Связь с отзывами
-    public function reviews() {
-        return $this->morphMany(Review::class, 'reviewable');
-    }
-
     // Связь с таблицей images
     public function images(): MorphMany
     {
@@ -55,5 +50,20 @@ class Trailer extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
+    public function reviews()
+    {
+        return $this->morphMany(Review::class, 'reviewable');
+    }
+
+    public function approvedReviews()
+    {
+        return $this->reviews()->where('is_approved', true)->latest();
     }
 }

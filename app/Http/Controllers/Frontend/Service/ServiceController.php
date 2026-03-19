@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend\Service;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\ServiceService;
+use App\Models\Service;
 
 class ServiceController extends Controller
 {
@@ -17,8 +18,25 @@ class ServiceController extends Controller
 
     public function index()
     {
-        $services = $this->serviceService->getAllServices(); 
+        $services = $this->serviceService->getPaginatedServices(12); 
+
+        $breadcrumbs = [
+            ['title' => 'Каталог услуг']
+        ];
         
-        return view('frontend.catalog-services', compact('services'));
+        return view('frontend.services.catalog-services', compact('services', 'breadcrumbs'));
     }
+
+    public function show(Service $service)
+    {
+        $data = $this->serviceService->getServiceDetails($service);
+
+        $data['breadcrumbs'] = [
+            ['title' => 'Каталог услуг', 'url' => route('service.index')],
+            ['title' => $service->name]
+        ];
+
+        return view('frontend.services.show', $data);
+    }
+    
 }
