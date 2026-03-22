@@ -1,10 +1,15 @@
 @extends('layouts.app')
+@section('title', 'Каталог информации')
+
+@section('description', 'Все, что нужно знать владельцу прицепа: советы по эксплуатации, юридические тонкости постановки на учет, правила ПДД и технические характеристики прицепов Караван.')
+
+@section('og_image', asset('img/og-img/og-trailer-cover.webp'))
 
 @section('content')
     <div class="h-full flex flex-col justify-between">
         <div class="flex flex-col gap-4">
             <div>
-                <h2 class="font-bold text-xl xl:text-2xl">Каталог информации</h2>
+                <h1 class="font-bold text-xl xl:text-2xl">Каталог информации</h1>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
                 @foreach($information as $item)

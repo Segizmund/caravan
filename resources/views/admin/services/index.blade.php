@@ -1,4 +1,5 @@
 @extends('layouts.admin')
+@section('title', 'Список услуг')
 
 @section('content')
 <div class="flex flex-col gap-5">

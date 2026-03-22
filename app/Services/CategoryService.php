@@ -7,22 +7,25 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
 use App\Services\SlugService;
+use App\Traits\InteractsWithImages;
 
 class CategoryService
 {
+    use InteractsWithImages;
+
     public function createCategory(array $data, ?UploadedFile $mainPhoto = null, ?array $galleryFiles = null): Category
     {
         $data['slug'] = SlugService::generate($data['name'], Category::class);
         $category = Category::create($data);
 
         if ($mainPhoto) {
-            $path = $mainPhoto->store('category', 'public');
+            $path = $this->uploadImageAsWebp($mainPhoto, 'category');
             $category->images()->create(['path' => $path, 'is_main' => true]);
         }
 
         if ($galleryFiles) {
             foreach ($galleryFiles as $photo) {
-                $path = $photo->store('category', 'public');
+                $path = $this->uploadImageAsWebp($photo, 'category');
                 $category->images()->create(['path' => $path, 'is_main' => false]);
             }
         }
@@ -44,7 +47,7 @@ class CategoryService
                 Storage::disk('public')->delete($oldMain->path);
                 $oldMain->delete();
             }
-            $path = $mainPhoto->store('category', 'public');
+            $path = $this->uploadImageAsWebp($mainPhoto, 'category');
             $category->images()->create(['path' => $path, 'is_main' => true]);
         }
 
@@ -58,7 +61,7 @@ class CategoryService
 
         if ($galleryFiles) {
             foreach ($galleryFiles as $photo) {
-                $path = $photo->store('category', 'public');
+                $path = $this->uploadImageAsWebp($photo, 'category');
                 $category->images()->create(['path' => $path, 'is_main' => false]);
             }
         }

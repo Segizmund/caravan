@@ -10,6 +10,7 @@ use App\Models\Setting;
 use App\Models\Information;
 use App\Models\Service;
 use App\Models\Category;
+use App\Models\Review;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -53,6 +54,12 @@ class AppServiceProvider extends ServiceProvider
         View::composer('components.frontend.short-categories', function ($view) {
             $view->with([
                 'categories' => Category::inRandomOrder()->take(3)->get(),
+            ]);
+        });
+
+        View::composer('components.admin.sidebar-menu', function ($view) {
+            $view->with([
+                'reviews' => Review::where('is_approved', 0)->get(),
             ]);
         });
 

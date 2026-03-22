@@ -1,17 +1,22 @@
 @extends('layouts.app')
+@section('title', 'Каталог услуг')
+
+@section('description', 'Профессиональное обслуживание легковых прицепов: ремонт ходовой, замена проводки, установка тентов и дополнительного оборудования. Быстро и с гарантией.')
+
+@section('og_image', asset('img/og-img/og-trailer-cover.webp'))
 
 @section('content')
     <div class="h-full flex flex-col justify-between">
         <div class="flex flex-col gap-4">
             <div>
-                <h2 class="font-bold text-xl xl:text-2xl">Каталог услуг</h2>
+                <h1 class="font-bold text-xl xl:text-2xl">Каталог услуг</h1>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
                 @foreach($services as $service)
                     <div class="bg-white p-3 rounded-lg flex flex-col gap-4">
                         @if($service->main_image)
                             <div>
-                                <img class="h-[180px] xl:h-[230px] w-full object-cover rounded-lg" src="{{ asset('storage/' . $service->main_image->path) }}" alt="{{ $service->name }}">
+                                <img class="h-[180px] xl:h-[230px] w-full object-cover rounded-lg" src="{{ asset('storage/' . $service->main_image->path) }}" alt="Услуга {{ $service->name }}">
                             </div>
                         @else
                             <div class="h-[180px] xl:h-[230px] w-full bg-gray-300 flex items-center justify-center rounded-lg">

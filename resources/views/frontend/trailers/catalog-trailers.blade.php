@@ -1,11 +1,16 @@
 @extends('layouts.app')
+@section('title', 'Каталог прицепов')
+
+@section('description', 'Широкий выбор прицепов для легковых автомобилей: одноосные, двуосные, для лодок и спецтехники. Доступные цены, гарантия и сервис в Мелитополе.')
+
+@section('og_image', asset('img/og-img/og-trailer-cover.webp'))
 
 @section('content')
     {{-- Каталог --}}
     <div class="h-full flex flex-col justify-between">
         <div class="flex flex-col gap-4">
             <div>
-                <h2 class="font-bold text-xl xl:text-2xl">Каталог</h2>
+                <h1 class="font-bold text-xl xl:text-2xl">Каталог</h1>
             </div>
             @foreach($categories as $category)
                 <div class="flex flex-col gap-6" data-category-id="{{ $category->id }}">

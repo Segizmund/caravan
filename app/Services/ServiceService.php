@@ -6,22 +6,25 @@ use App\Models\Service;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
 use App\Services\SlugService;
+use App\Traits\InteractsWithImages;
 
 class ServiceService
 {
+    use InteractsWithImages;
+
     public function createService(array $data, ?UploadedFile $mainPhoto = null, ?array $galleryFiles = null): Service
     {
         $data['slug'] = SlugService::generate($data['name'], Service::class);
         $service = Service::create($data);
 
         if ($mainPhoto) {
-            $path = $mainPhoto->store('services', 'public');
+            $path = $this->uploadImageAsWebp($mainPhoto, 'services');
             $service->images()->create(['path' => $path, 'is_main' => true]);
         }
 
         if ($galleryFiles) {
             foreach ($galleryFiles as $photo) {
-                $path = $photo->store('services', 'public');
+                $path = $this->uploadImageAsWebp($photo, 'services');
                 $service->images()->create(['path' => $path, 'is_main' => false]);
             }
         }
@@ -43,7 +46,7 @@ class ServiceService
                 Storage::disk('public')->delete($oldMain->path);
                 $oldMain->delete();
             }
-            $path = $mainPhoto->store('services', 'public');
+            $path = $this->uploadImageAsWebp($mainPhoto, 'services');
             $service->images()->create(['path' => $path, 'is_main' => true]);
         }
 
@@ -57,7 +60,7 @@ class ServiceService
 
         if ($galleryFiles) {
             foreach ($galleryFiles as $photo) {
-                $path = $photo->store('services', 'public');
+                $path = $this->uploadImageAsWebp($photo, 'services');
                 $service->images()->create(['path' => $path, 'is_main' => false]);
             }
         }

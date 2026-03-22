@@ -1,4 +1,9 @@
 @extends('layouts.admin')
+@if(isset($service))
+    @section('title', $service->name)
+@else
+    @section('title', 'Добавление новой услуги')
+@endif
 
 @section('content')
 <div class="flex flex-col gap-5">

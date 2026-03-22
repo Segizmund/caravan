@@ -1,4 +1,5 @@
 @extends('layouts.admin')
+@section('title', 'Отзывы')
 
 @section('content')
 <div class="container mx-auto py-8 px-4">
@@ -6,10 +7,13 @@
 
     <div class="bg-white shadow-sm rounded-xl overflow-hidden border border-gray-200">
         {{-- Шапка "таблицы" --}}
-        <div class="hidden md:grid grid-cols-[15%_20%_auto_15%_10%] bg-gray-50 border-b border-gray-200 py-3 px-6 text-xs uppercase font-bold text-gray-500 tracking-wider">
+        <div class="hidden md:grid grid-cols-[15%_20%_auto_15%_15%_10%] bg-gray-50 border-b border-gray-200 py-3 px-6 text-xs uppercase font-bold text-gray-500 tracking-wider">
             <div>Автор / Дата</div>
             <div>Объект</div>
             <div>Отзыв и Фото</div>
+            <div>
+                Фото
+            </div>
             <div class="text-center">Статус</div>
             <div class="text-right">Действия</div>
         </div>
@@ -17,7 +21,7 @@
         {{-- Список отзывов --}}
         <div class="flex flex-col">
             @forelse($reviews as $review)
-                <div class="grid grid-cols-1 md:grid-cols-[15%_20%_auto_15%_10%] border-b border-gray-100 last:border-0 p-4 md:px-6 md:py-5 hover:bg-gray-50 transition items-center gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-[15%_20%_auto_15%_15%_10%] border-b border-gray-100 last:border-0 p-4 md:px-6 md:py-5 hover:bg-gray-50 transition items-center gap-4">
                     
                     {{-- Автор --}}
                     <div class="flex flex-col gap-1">
@@ -37,7 +41,7 @@
                         @endif
                     </div>
 
-                    {{-- Контент: Текст + Фото --}}
+                    {{-- Контент: Текст --}}
                     <div class="flex flex-col gap-3">
                         <div class="flex flex-col gap-1">
                             <div class="flex text-yellow-400 text-xs">
@@ -47,8 +51,10 @@
                             </div>
                             <p class="text-gray-600 text-sm leading-snug italic">"{{ $review->comment }}"</p>
                         </div>
+                    </div>
 
-                        {{-- Фотографии отзыва --}}
+                    {{-- Фотографии отзыва --}}
+                    <div>
                         @if($review->images->count() > 0)
                             <div class="flex flex-wrap gap-2 mt-1">
                                 @foreach($review->images as $img)
@@ -64,11 +70,18 @@
 
                     {{-- Статус --}}
                     <div class="flex justify-start md:justify-center">
-                        <form action="{{ route('admin.reviews.toggle', $review) }}" method="POST">
+                        <form class="relative flex" action="{{ route('admin.reviews.toggle', $review) }}" method="POST">
                             @csrf @method('PATCH')
                             <button type="submit" class="w-fit px-3 py-1 rounded-full text-[11px] font-bold transition {{ $review->is_approved ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-orange-100 text-orange-700 hover:bg-orange-200' }}">
                                 {{ $review->is_approved ? 'Одобрен' : 'На модерации' }}
                             </button>
+                            @if($review->is_approved === 0)
+                                <div class="h-2 w-2 rounded-full bg-red-600 absolute top-0 right-0">
+                                        <div class="h-2 w-2 rounded-full bg-red-600 animate-ping">
+
+                                        </div>
+                                </div>
+                            @endif
                         </form>
                     </div>
 

@@ -1,5 +1,9 @@
 @extends('layouts.admin')
-
+@if(isset($trailer))
+    @section('title', $trailer->name)
+@else
+    @section('title', 'Добавление нового прицепа')
+@endif
 @section('content')
 <div class="flex flex-col gap-5">
     <div class="flex items-center gap-2">

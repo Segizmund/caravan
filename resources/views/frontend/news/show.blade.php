@@ -1,4 +1,15 @@
 @extends('layouts.app')
+@section('title', $news->title)
+
+@section('description', Str::limit(strip_tags($news->description), 160))
+
+@section('og_image')
+    @if($mainImage)
+        {{ asset('storage/' . $mainImage->path) }}
+    @else
+        {{ asset('img/og-img/default-share.webp') }}
+    @endif
+@endsection
 
 @section('content')
 <div class="flex flex-col gap-8">

@@ -37,7 +37,7 @@
                         </div>
                         <div class="flex flex-col lg:flex-row lg:items-center gap-3">
                             @auth
-                                @if(auth()->user()->isAdmin()) {{-- Или @if(auth()->user()->isAdmin()) --}}
+                                @if(auth()->user()->isAdmin())
                                     <a href="{{ route('admin.dashboard') }}" 
                                     class="hover:text-[#e28c00] font-semibold transition duration-300 ease-linear flex items-center gap-2">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
@@ -63,7 +63,7 @@
     </div>
 </header>
 <div class="relative h-[233px] sm:h-[250px] md:h-[350px] xl:h-[400px] 2xl:h-[500px] mb-8 px-2.5 2xl:px-0">
-    <img class="absolute left-0 top-0 h-full w-full object-cover object-[24%] sm:object-center sm:object-fit" src="{{ asset('storage/frontend/header-bg.jpg') }}" alt="Header Background">
+    <img class="absolute left-0 top-0 h-full w-full object-cover object-[24%] sm:object-center sm:object-fit" src="{{ asset('img/homePage/header-bg.webp') }}" alt="Header Background">
     <div class="bg-[rgba(0,0,0,0.2)] min-h-full min-w-full pointer-events-none absolute top-0 left-0">
     </div>
     <div class="relative container mx-auto h-full">

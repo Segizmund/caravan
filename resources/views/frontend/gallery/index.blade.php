@@ -1,10 +1,15 @@
 @extends('layouts.app')
+@section('title', 'Галерея')
+
+@section('description', 'Посмотрите фотографии наших легковых прицепов в эксплуатации, детали производства и готовые решения для клиентов. Реальные фото прицепов Караван.')
+
+@section('og_image', asset('img/og-img/og-trailer-cover.webp'))
 
 @section('content')
 <div class="h-full flex flex-col justify-between">
     <div class="flex flex-col gap-4">
         <div>
-            <h2 class="font-bold text-xl xl:text-2xl">Галерея</h2>
+            <h1 class="font-bold text-xl xl:text-2xl">Галерея</h1>
         </div>
 
         {{-- Сетка изображений --}}

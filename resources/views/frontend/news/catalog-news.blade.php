@@ -1,16 +1,21 @@
 @extends('layouts.app')
+@section('title', 'Каталог объявлений')
+
+@section('description', 'Свежие новости компании Караван: новые модели прицепов, отчеты с производства, участие в выставках и полезные советы для владельцев легковых прицепов в Мелитополе.')
+
+@section('og_image', asset('img/og-img/og-trailer-cover.webp'))
 
 @section('content')
     <div class="flex flex-col gap-4">
         <div>
-            <h2 class="font-bold text-xl xl:text-2xl">Каталог Обновлений</h2>
+            <h1 class="font-bold text-xl xl:text-2xl">Каталог Обновлений</h1>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
             @foreach($news as $item)
                 <a href="{{ route('news.show', $item) }}" class="bg-white p-3 rounded-lg flex flex-col gap-4 group">
                     @if($item->main_image)
                         <div>
-                            <img class="h-[180px] xl:h-[230px] w-full object-cover rounded-lg" src="{{ asset('storage/' . $item->main_image->path) }}" alt="{{ $item->title }}">
+                            <img class="h-[180px] xl:h-[230px] w-full object-cover rounded-lg" src="{{ asset('storage/' . $item->main_image->path) }}" alt="Объявление - {{ $item->title }}">
                         </div>
                     @else
                         <div class="h-[180px] xl:h-[230px] w-full bg-gray-300 flex items-center justify-center rounded-lg">

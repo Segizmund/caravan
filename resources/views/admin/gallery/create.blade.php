@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-
+@section('title', 'Добавление фото в галерею')
 @section('content')
 <div class="flex flex-col gap-5">
     <div class="flex items-center gap-2">

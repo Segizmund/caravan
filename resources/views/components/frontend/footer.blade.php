@@ -1,6 +1,6 @@
 <footer class="mt-20">
     <div class="relative px-2.5 2xl:px-0">
-        <img class="absolute left-0 top-0 h-full w-full object-cover object-[97%] sm:object-center sm:object-fit" src="{{ asset('storage/frontend/footer-bg.jpg') }}" alt="Header Background">
+        <img class="absolute left-0 top-0 h-full w-full object-cover object-[97%] sm:object-center sm:object-fit" src="{{ asset('img/homePage/footer-bg.webp') }}" alt="Footer Background">
         <div class="bg-[rgba(0,0,0,0.6)] min-h-full min-w-full pointer-events-none absolute top-0 left-0">
         </div>
         <div class="flex flex-col relative z-10 container mx-auto py-6">

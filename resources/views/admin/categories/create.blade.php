@@ -1,4 +1,9 @@
 @extends('layouts.admin')
+@if(isset($category))
+    @section('title', $category->name)
+@else
+    @section('title', 'Добавление новой категории')
+@endif
 
 @section('content')
 <div class="flex flex-col gap-5">

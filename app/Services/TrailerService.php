@@ -1,31 +1,32 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\Trailer;
 use App\Models\Category;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
 use App\Services\SlugService;
+use App\Traits\InteractsWithImages;
 
 class TrailerService
 {
+    use InteractsWithImages;
+
     public function createTrailer(array $data, ?UploadedFile $mainPhoto = null, ?array $galleryFiles = null): Trailer
     {
         $data['slug'] = SlugService::generate($data['name'], Trailer::class);
 
         $trailer = Trailer::create($data);
 
-        // Сохраняем главное фото
         if ($mainPhoto) {
-            $path = $mainPhoto->store('trailers', 'public');
+            $path = $this->uploadImageAsWebp($mainPhoto, 'trailers');
             $trailer->images()->create(['path' => $path, 'is_main' => true]);
         }
 
-        // Сохраняем галерею
         if ($galleryFiles) {
             foreach ($galleryFiles as $photo) {
-                $path = $photo->store('trailers', 'public');
+                $path = $this->uploadImageAsWebp($photo, 'trailers');
                 $trailer->images()->create(['path' => $path, 'is_main' => false]);
             }
         }
@@ -35,24 +36,21 @@ class TrailerService
 
     public function updateTrailer(Trailer $trailer, array $data, ?UploadedFile $mainPhoto = null, ?array $galleryFiles = null, array $removeImageIds = [])
     {
-        // Обновление данных
         if (isset($data['name']) && $data['name'] !== $trailer->name) {
             $data['slug'] = SlugService::generate($data['name'], Trailer::class, $trailer->id);
         }
         $trailer->update($data);
 
-        // Обработка замены ГЛАВНОГО фото
         if ($mainPhoto) {
             $oldMain = $trailer->images()->where('is_main', true)->first();
             if ($oldMain) {
                 Storage::disk('public')->delete($oldMain->path);
                 $oldMain->delete();
             }
-            $path = $mainPhoto->store('trailers', 'public');
+            $path = $this->uploadImageAsWebp($mainPhoto, 'trailers');
             $trailer->images()->create(['path' => $path, 'is_main' => true]);
         }
 
-        // Удаление выбранных фото из галереи
         if (!empty($removeImageIds)) {
             $images = $trailer->images()->whereIn('id', $removeImageIds)->get();
             foreach ($images as $image) {
@@ -61,10 +59,9 @@ class TrailerService
             }
         }
 
-        // Добавление новых фото в галерею
         if ($galleryFiles) {
             foreach ($galleryFiles as $photo) {
-                $path = $photo->store('trailers', 'public');
+                $path = $this->uploadImageAsWebp($photo, 'trailers');
                 $trailer->images()->create(['path' => $path, 'is_main' => false]);
             }
         }
@@ -72,9 +69,7 @@ class TrailerService
 
     public function deleteTrailer(Trailer $trailer): void
     {
-        $images = $trailer->images;
-
-        foreach ($images as $image) {
+        foreach ($trailer->images as $image) {
             Storage::disk('public')->delete($image->path);
         }
 
@@ -122,5 +117,4 @@ class TrailerService
             'additionalImages' => $additionalImages,
         ];
     }
-
 }

@@ -1,5 +1,4 @@
 <div class="shadow-md p-5 h-screen bg-gray-100 fixed w-[280px] flex flex-col">
-    
     <div class="mb-5 border-b border-blue-200 pb-2 flex-shrink-0">
         <a href="{{route('admin.dashboard')}}" class="flex hover:text-blue-500 hover:scale-105 transition duration-300 ease-linear">Караван - Админ панель</a>
     </div>
@@ -18,8 +17,17 @@
 
         <div class="flex flex-col gap-2 py-2">
             <div>
-                <a class="p-2 flex w-full hover:bg-blue-500 hover:text-white rounded-xl transition duration-300 ease-linear {{request()->routeIs('admin.reviews.index') ? 'bg-blue-500 text-white' : ''}}" 
-                   href="{{ route('admin.reviews.index') }}">Список комментариев</a>
+                <a class="p-2 flex relative w-full hover:bg-blue-500 hover:text-white rounded-xl transition duration-300 ease-linear {{request()->routeIs('admin.reviews.index') ? 'bg-blue-500 text-white' : ''}}" 
+                   href="{{ route('admin.reviews.index') }}">
+                   @if($reviews->count() > 0)
+                    <div class="h-2 w-2 rounded-full bg-red-600 absolute top-0 right-0">
+                            <div class="h-2 w-2 rounded-full bg-red-600 animate-ping">
+
+                            </div>
+                    </div>
+                   @endif
+                   Список комментариев
+                </a>
             </div>
         </div>
 

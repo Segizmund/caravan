@@ -3,11 +3,14 @@
 namespace App\Services;
 
 use App\Models\Gallery;
-use App\Models\Image;
+use App\Models\Image as ImageModel;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\InteractsWithImages;
 
 class GalleryService
 {
+    use InteractsWithImages;
+
     public function addToGallery(?array $files): void
     {
         if (!$files) return;
@@ -15,7 +18,7 @@ class GalleryService
         $gallery = Gallery::firstOrCreate(['id' => 1]);
 
         foreach ($files as $photo) {
-            $path = $photo->store('gallery', 'public');
+            $path = $this->uploadImageAsWebp($photo, 'gallery');
             
             $gallery->images()->create([
                 'path' => $path
@@ -25,8 +28,10 @@ class GalleryService
 
     public function deleteImage(int $imageId): void
     {
-        $image = Image::findOrFail($imageId);
+        $image = ImageModel::findOrFail($imageId);
+        
         Storage::disk('public')->delete($image->path);
+        
         $image->delete();
     }
 
@@ -34,7 +39,7 @@ class GalleryService
     {
         $gallery = Gallery::firstOrCreate(['id' => 1]);
         
-        $images = $image = $gallery->images()
+        $images = $gallery->images()
             ->latest()
             ->paginate($perPage);
 

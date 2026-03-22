@@ -1,4 +1,15 @@
 @extends('layouts.app')
+@section('title', $trailer->name)
+
+@section('description', Str::limit(strip_tags($trailer->description), 160))
+
+@section('og_image')
+    @if($mainImage)
+        {{ asset('storage/' . $mainImage->path) }}
+    @else
+        {{ asset('img/og-img/default-share.webp') }}
+    @endif
+@endsection
 
 @section('content')
 <div class="flex flex-col">

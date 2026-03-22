@@ -1,4 +1,9 @@
 @extends('layouts.app')
+@section('title', 'Контакты')
+
+@section('description', 'Свяжитесь с нами для покупки прицепа или записи на сервис. Наш адрес: Мелитополь, ' . ($contacts->first()->address ?? '') . '. Телефоны: ' . ($contacts->first()->first_phone ?? ''))
+
+@section('og_image', asset('img/og-img/og-trailer-cover.webp'))
 
 @section('content')
     {{-- Услуги --}}
@@ -6,7 +11,7 @@
     {{-- Контакты --}}
     <div class="flex flex-col gap-4">
         <div class="flex items-center justify-between">
-            <h2 class="font-bold text-xl xl:text-2xl">Контакты</h2>
+            <h1 class="font-bold text-xl xl:text-2xl">Контакты</h1>
         </div>
         <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
             @forelse ($contacts as $item)

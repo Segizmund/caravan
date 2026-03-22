@@ -5,12 +5,21 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>Караван — @yield('title', 'Прицепы в Мелитополе')</title>
+        <meta name="description" content="@yield('description', 'Лучшие легковые прицепы, запчасти и сервисное обслуживание. Гарантия качества от производителя.')">
+
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="{{ url()->current() }}">
+        <meta property="og:title" content="@yield('title', 'Прицепы Караван')">
+        <meta property="og:description" content="@yield('description', 'Продажа и сервис прицепов.')">
+        <meta property="og:image" content="@yield('og_image', asset('img/og-img/og-trailer-cover.webp'))">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+        <link rel="icon" type="image/svg+xml" href="{{asset('img/icons/fav16.svg')}}">
 
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
         <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>

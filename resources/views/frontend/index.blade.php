@@ -1,4 +1,9 @@
 @extends('layouts.app')
+@section('title', 'Главная')
+
+@section('description', 'МЗАП Караван — ведущий производитель высококачественных легковых прицепов. Усиленные рамы, комплектующие KNOTT и AL-KO. Продажа, гарантия и сервисное обслуживание в Мелитополе.')
+
+@section('og_image', asset('img/og-img/og-trailer-cover.webp'))
 
 @section('content')
     {{-- Услуги --}}
@@ -25,10 +30,10 @@
             </div>
             <div class="flex flex-col gap-8">
                 <div>
-                    <img class="object-cover h-full w-full rounded-lg" src="{{ asset('storage/frontend/home-page-1.jpg') }}" alt="Караван фото">
+                    <img class="object-cover h-full w-full rounded-lg" src="{{ asset('img/homePage/home-page-1.webp') }}" alt="Караван фото">
                 </div>
                 <div>
-                    <img class="object-cover h-full w-full rounded-lg" src="{{ asset('storage/frontend/home-page-2.jpg') }}" alt="Караван фото">
+                    <img class="object-cover h-full w-full rounded-lg" src="{{ asset('img/homePage/home-page-2.webp') }}" alt="Караван фото">
                 </div>
             </div>
         </div>
@@ -39,13 +44,13 @@
         <div class="grid lg:grid-cols-[55%_auto] gap-8 bg-white px-5 py-3 rounded-lg">
             <div class="grid grid-cols-3 md:grid-cols-1 lg:grid-cols-3 gap-4 lg:h-[270px]">
                 <div>
-                    <img class="object-contain lg:object-cover h-[200px] lg:h-full w-full rounded-lg" src="{{ asset('storage/frontend/home-page-3.jpg') }}" alt="Караван сертификат">
+                    <img class="object-contain lg:object-cover h-[200px] lg:h-full w-full rounded-lg" src="{{ asset('img/homePage/home-page-3.webp') }}" alt="Караван сертификат">
                 </div>
                 <div>
-                    <img class="object-contain lg:object-cover h-[200px] lg:h-full w-full rounded-lg" src="{{ asset('storage/frontend/home-page-4.jpg') }}" alt="Караван сертификат">
+                    <img class="object-contain lg:object-cover h-[200px] lg:h-full w-full rounded-lg" src="{{ asset('img/homePage/home-page-4.webp') }}" alt="Караван сертификат">
                 </div>
                 <div>
-                    <img class="object-contain lg:object-cover h-[200px] lg:h-full w-full rounded-lg" src="{{ asset('storage/frontend/home-page-5.jpg') }}" alt="Караван сертификат">
+                    <img class="object-contain lg:object-cover h-[200px] lg:h-full w-full rounded-lg" src="{{ asset('img/homePage/home-page-5.webp') }}" alt="Караван сертификат">
                 </div>
             </div>
             <div>
@@ -67,7 +72,7 @@
                 </p>
             </div>
             <div>
-                <img class="object-cover h-full w-full rounded-lg" src="{{ asset('storage/frontend/home-page-6.jpg') }}" alt="Караван фото">
+                <img class="object-cover h-full w-full rounded-lg" src="{{ asset('img/homePage/home-page-6.webp') }}" alt="Караван фото">
             </div>
         </div>
     </div>

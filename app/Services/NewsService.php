@@ -6,22 +6,25 @@ use App\Models\News;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
 use App\Services\SlugService;
+use App\Traits\InteractsWithImages;
 
 class NewsService
 {
+    use InteractsWithImages;
+
     public function createNews(array $data, ?UploadedFile $mainPhoto = null, ?array $galleryFiles = null): News
     {
         $data['slug'] = SlugService::generate($data['title'], News::class);
         $news = News::create($data);
 
         if ($mainPhoto) {
-            $path = $mainPhoto->store('news', 'public');
+            $path = $this->uploadImageAsWebp($mainPhoto, 'news');
             $news->images()->create(['path' => $path, 'is_main' => true]);
         }
 
         if ($galleryFiles) {
             foreach ($galleryFiles as $photo) {
-                $path = $photo->store('news', 'public');
+                $path = $this->uploadImageAsWebp($photo, 'news');
                 $news->images()->create(['path' => $path, 'is_main' => false]);
             }
         }
@@ -43,7 +46,7 @@ class NewsService
                 Storage::disk('public')->delete($oldMain->path);
                 $oldMain->delete();
             }
-            $path = $mainPhoto->store('news', 'public');
+            $path = $this->uploadImageAsWebp($mainPhoto, 'news');
             $news->images()->create(['path' => $path, 'is_main' => true]);
         }
 
@@ -57,7 +60,7 @@ class NewsService
 
         if ($galleryFiles) {
             foreach ($galleryFiles as $photo) {
-                $path = $photo->store('news', 'public');
+                $path = $this->uploadImageAsWebp($photo, 'news');
                 $news->images()->create(['path' => $path, 'is_main' => false]);
             }
         }

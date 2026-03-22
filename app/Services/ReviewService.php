@@ -4,15 +4,19 @@ namespace App\Services;
 
 use App\Models\Review;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\InteractsWithImages;
 
 class ReviewService
 {
+    use InteractsWithImages;
+
     public function createReview(array $data, array $files = []): Review
     {
         $review = Review::create($data);
 
         foreach ($files as $file) {
-            $path = $file->store('reviews', 'public');
+            $path = $this->uploadImageAsWebp($file, 'reviews', 1200);
+            
             $review->images()->create(['path' => $path]);
         }
 
