@@ -12,7 +12,7 @@
                 <h1 class="font-bold text-xl xl:text-2xl">Каталог информации</h1>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
-                @foreach($information as $item)
+                @forelse($information as $item)
                     <a href="{{ route('information.show', $item) }}" class="bg-white relative p-3 rounded-lg flex flex-col gap-4 group">
                         <div class="flex flex-col gap-2">
                             <div class="flex items-center gap-2 group-hover:text-[#e28c00] transition duration-300 ease-linear">
@@ -27,7 +27,11 @@
                             <p class="line-clamp-1">{{$item->description}}</p>
                         </div>
                     </a>
-                @endforeach
+                    @empty
+                        <div class="p-10 text-center text-gray-500 col-span-full border-2 border-dashed rounded-lg">
+                            <h3 class="text-lg font-medium">Каталог пуст</h3>
+                        </div>
+                @endforelse
             </div>
         </div>
         {{-- Вывод ссылок пагинации --}}

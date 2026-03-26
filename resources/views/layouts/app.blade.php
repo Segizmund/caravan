@@ -21,8 +21,7 @@
 
         <link rel="icon" type="image/svg+xml" href="{{asset('img/icons/fav16.svg')}}">
 
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
-        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+        <link rel="stylesheet" href="{{ asset('css/fancybox.css') }}">
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -44,6 +43,8 @@
             <div id="toast-container" class="fixed top-5 left-5 z-[100] flex flex-col gap-3"></div>
         </div>
         <x-frontend.footer />
+
+        <script src="{{ asset('js/fancybox.umd.js') }}"></script>
     </body>
 </html>
 

@@ -30,7 +30,7 @@
                     </div>
                 </a>
             @empty
-                <div class="col-span-full py-12 text-center text-gray-400">
+                <div class="p-10 text-center text-gray-500 col-span-full border-2 border-dashed rounded-lg">
                     Галерея пока пуста.
                 </div>
             @endforelse

@@ -59,7 +59,7 @@
         </div>
         @empty
             <div class="p-10 text-center text-gray-500 col-span-full border-2 border-dashed rounded-lg">
-                @if($hasSearchQuery)
+                @if($search)
                     <h3 class="text-lg font-medium">Ничего не найдено</h3>
                     <p>По вашему запросу <strong>"{{ $search }}"</strong> ничего не найдено. Попробуйте изменить название.</p>
                     <a href="{{ route('admin.categories.index') }}" class="text-indigo-600 hover:underline">Сбросить фильтр</a>

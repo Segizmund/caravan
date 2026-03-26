@@ -12,7 +12,7 @@
             <div>
                 <h1 class="font-bold text-xl xl:text-2xl">Каталог</h1>
             </div>
-            @foreach($categories as $category)
+            @forelse($categories as $category)
                 <div class="flex flex-col gap-6" data-category-id="{{ $category->id }}">
                     <div class="bg-white rounded-lg w-full py-2 px-3 flex justify-between items-center">
                         <h2 class="font-medium">{{ $category->name }}</h2>
@@ -34,7 +34,12 @@
                         </button>
                     @endif
                 </div>
-            @endforeach
+
+                @empty
+                    <div class="p-10 text-center text-gray-500 col-span-full border-2 border-dashed rounded-lg">
+                        <h3 class="text-lg font-medium">Каталог пуст</h3>
+                    </div>
+            @endforelse
         
 
         </div>

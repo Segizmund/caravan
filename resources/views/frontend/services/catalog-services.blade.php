@@ -12,7 +12,7 @@
                 <h1 class="font-bold text-xl xl:text-2xl">Каталог услуг</h1>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
-                @foreach($services as $service)
+                @forelse($services as $service)
                     <div class="bg-white p-3 rounded-lg flex flex-col gap-4">
                         @if($service->main_image)
                             <div>
@@ -38,7 +38,11 @@
                                 </button>
                             </div>
                     </div>
-                @endforeach
+                    @empty
+                        <div class="p-10 text-center text-gray-500 col-span-full border-2 border-dashed rounded-lg">
+                            <h3 class="text-lg font-medium">Каталог пуст</h3>
+                        </div>
+                @endforelse
             </div>
         </div>
         <div class="pagination">

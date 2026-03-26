@@ -11,7 +11,7 @@
             <h1 class="font-bold text-xl xl:text-2xl">Каталог Обновлений</h1>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
-            @foreach($news as $item)
+            @forelse($news as $item)
                 <a href="{{ route('news.show', $item) }}" class="bg-white p-3 rounded-lg flex flex-col gap-4 group">
                     @if($item->main_image)
                         <div>
@@ -32,7 +32,11 @@
                             </div>
                         </div>
                 </a>
-            @endforeach
+                @empty
+                    <div class="p-10 text-center text-gray-500 col-span-full border-2 border-dashed rounded-lg">
+                        <h3 class="text-lg font-medium">Каталог пуст</h3>
+                    </div>
+            @endforelse
         </div>
     </div>
 @endsection

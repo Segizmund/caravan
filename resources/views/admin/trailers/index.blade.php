@@ -80,7 +80,7 @@
         </div>
     @empty
         <div class="p-10 text-center text-gray-500 border-2 border-dashed rounded-lg">
-            @if($hasSearchQuery)
+            @if($search)
                 <h3 class="text-lg font-medium">Ничего не найдено</h3>
                 <p>По вашему запросу прицепов не обнаружено. Попробуйте сменить категорию или название.</p>
                 <a href="{{ route('admin.trailers.index') }}" class="text-indigo-600 hover:underline">Сбросить фильтры</a>
